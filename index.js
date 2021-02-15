@@ -1,7 +1,7 @@
 const express = require('express');
 const app =express();
 
-app.get('/users', (req, res) => {
+app.get('/api/users', (req, res) => {
   res.send(['user 1', 'user 2']);
 });
 
