@@ -1,47 +1,79 @@
-require('./storageSetup');
+require("./storageSetup");
+const getEmployees = require("./utils/getEmployees");
+const { getProfileData, setProfileData } = require("./utils/getProfileData");
+const { HTTP_STATUSES } = require("./utils/constants");
 
-const csv = require('csv-parser');
-const fs = require('fs');
-const express = require('express');
-const app =express();
+const express = require("express");
+const app = express();
 
-app.get('/api/users', (req, res) => {
-  res.send(['user 1', 'user 2']);
+// app.get("/api/users", (req, res) => {
+//   res.send(["user 1", "user 2"]);
+// });
+
+app.get("/api/employees", async (req, res) => {
+  const employees = await getEmployees();
+
+  if (employees !== null) {
+    res.send({ data: employees });
+  } else {
+    const { internalServerError } = HTTP_STATUSES;
+    return res
+      .status(internalServerError.code)
+      .send({ error: internalServerError.message });
+  }
 });
 
-app.get('/api/employees', async (req, res) => {
-  /*fs.readFile('./mocks/employees cvs.csv', 'utf8' , (err, data) => {
-    if (err) {
-      console.error(err)
-      return res.status(500).send({ error: 'Something went wrong. Please try again later!' });
+app.post("/api/register", (req, res) => {
+  // TODO: Validate received data
+  const data = req.data;
+
+  // TODO: remove this hardcoding
+  if (true) {
+    // all data is validated
+
+    const userId = registerUser(data); // remember that for `userId` we use his email
+
+    res.redirect(`/profile/${userId}`)
+    const { ok } = HTTP_STATUSES;
+    res.status(ok.code).send({ data: "" });
+  } else {
+    const { unprocessableEntity } = HTTP_STATUSES;
+    res
+      .status(unprocessableEntity.code)
+      .send({ error: unprocessableEntity.message });
+  }
+  const result = {};
+  res.send();
+});
+
+app.post("/api/login", async (req, res) => {
+  const employees = await getEmployees();
+
+  if (employees) {
+    // Imitation of searching user in DB
+    const loggedInUser = employees.find(
+      (employee) => employee.email === req.email
+    );
+    if (loggedInUser) {
+      res.redirect("/profile");
+    } else {
+      const { unauthorized } = HTTP_STATUSES;
+      res.status(unauthorized.code).send({ error: unauthorized.message });
     }
-    res.send({data})
-    // console.log(data);
-  })*/
+  } else {
+    const { internalServerError } = HTTP_STATUSES;
+    res.status(internalServerError.code).send({error: internalServerError.message})
+  }
+});
 
-  try {
-    let employees = [];
-    const cachedEmployees = localStorage.getItem('employees');
+app.get('/api/profileData', (req, res) => {
+  const { userId } = req;
 
-    if (cachedEmployees) {
-      employees = JSON.parse(cachedEmployees);
-
-      res.send({data: employees});
-    } else { // no previously stored data, get from the file (or from DB in real environment)
-      await fs.createReadStream('./mocks/employees cvs.csv')
-        .pipe(csv())
-        .on('data', (row) => {
-          employees.push(row);
-        })
-        .on('end', () => {
-          // Cache results locally
-          localStorage.setItem('employees', JSON.stringify(employees));
-
-          res.send({data: employees});
-        });
-    }
-  } catch {
-    return res.status(500).send({ error: 'Something went wrong. Please try again later!' });
+  const profileData = getProfileData(userId);
+  if (profileData) {
+    res.status(HTTP_STATUSES.ok.code).send({data: profileData});
+  } else {
+    res.status(HTTP_STATUSES.internalServerError.code).send({error: HTTP_STATUSES.internalServerError.message});
   }
 });
 
