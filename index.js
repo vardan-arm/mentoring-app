@@ -33,7 +33,7 @@ app.post("/api/register", (req, res) => {
 
     const userId = registerUser(data); // remember that for `userId` we use his email
 
-    res.redirect(`/profile/${userId}`)
+    res.redirect(`/profile/${userId}`);
     const { ok } = HTTP_STATUSES;
     res.status(ok.code).send({ data: "" });
   } else {
@@ -62,18 +62,22 @@ app.post("/api/login", async (req, res) => {
     }
   } else {
     const { internalServerError } = HTTP_STATUSES;
-    res.status(internalServerError.code).send({error: internalServerError.message})
+    res
+      .status(internalServerError.code)
+      .send({ error: internalServerError.message });
   }
 });
 
-app.get('/api/profileData', (req, res) => {
+app.get("/api/profileData", (req, res) => {
   const { userId } = req;
 
   const profileData = getProfileData(userId);
   if (profileData) {
-    res.status(HTTP_STATUSES.ok.code).send({data: profileData});
+    res.status(HTTP_STATUSES.ok.code).send({ data: profileData });
   } else {
-    res.status(HTTP_STATUSES.internalServerError.code).send({error: HTTP_STATUSES.internalServerError.message});
+    res
+      .status(HTTP_STATUSES.internalServerError.code)
+      .send({ error: HTTP_STATUSES.internalServerError.message });
   }
 });
 

@@ -5,7 +5,7 @@ const HTTP_STATUSES = {
   },
   unauthorized: {
     code: 401,
-    message: 'Incorrect username/password'
+    message: "Incorrect username/password",
   },
   unprocessableEntity: {
     code: 422,
