@@ -6,7 +6,7 @@ import formSlice from "../../store/form";
 import { useDispatch, useSelector } from "react-redux";
 import WizardStepContainer from "../common/WizardStepContainer";
 import React, { useState, useEffect } from "react";
-import { fetchEmployees } from "../../store/actions/fetchEmployees";
+import { fetchAllEmployees } from "../../store/actions/fetchAllEmployees";
 import { getAllEmployees } from "../../store/selectors/general";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { getForm, getUserGroup } from "../../store/selectors/form";
@@ -50,7 +50,7 @@ const GroupManagement = ({ handleBack, handleNext }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchEmployees());
+    dispatch(fetchAllEmployees());
   }, []);
 
   // TODO: this email info should be received from backend -> redux

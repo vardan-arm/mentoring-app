@@ -14,7 +14,7 @@ import userSlice from "../../store/user";
 import formSlice from "../../store/form";
 import { getForm } from "../../store/selectors/form";
 import Paper from "@material-ui/core/Paper";
-import { fetchEmployees } from "../../store/actions/fetchEmployees";
+import { fetchAllEmployees } from "../../store/actions/fetchAllEmployees";
 import { EMAIL_VALIDATION_REGEX } from "../../utils/constants";
 
 const useStyles = makeStyles({

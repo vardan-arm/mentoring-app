@@ -9,6 +9,8 @@ import { getRedirectUrl } from "../store/selectors/general";
 import generalSlice from "../store/general";
 import { getUser } from "../store/selectors/user";
 import LoginDialog from "./LoginDialog";
+import userSlice from "../store/user";
+import {isLocationAllowed} from "../utils/isLocationAllowed";
 
 // TODO: Use `stepper` for user's steps
 
@@ -27,19 +29,26 @@ const Header = () => {
   // const [userInfo, setUserInfo] = useState(null);
 
   const classes = useStyles();
-  const location = useLocation();
+  const dispatch = useDispatch();
 
-  // const [openLoginDialog, setOpenLoginDialog] = useState(false);
+  const location = useLocation();
+  const history = useHistory();
 
   const userInfo = useSelector((state) => getUser(state));
+
+  // Check whether the non-logged in user can visit current page
+  if (!userInfo.id && !isLocationAllowed(location.pathname)) {
+    history.replace('/')
+  }
+  // const [openLoginDialog, setOpenLoginDialog] = useState(false);
+
 
   /*useEffect(() => {
 
     setUserInfo(false);
   }, []);*/
 
-  const dispatch = useDispatch();
-  const history = useHistory();
+
 
   const redirectUrl = useSelector((state) => getRedirectUrl(state));
   if (redirectUrl) {
@@ -48,20 +57,19 @@ const Header = () => {
   }
 
   let output = "";
-
-  // if (location.pathname === "/registration" || userInfo === null) {
+console.log({userInfo});
   if (location.pathname === "/registration") {
     return "";
   } else if (userInfo.id) {
     // logged in
     output = (
       <>
-        <div>Hi, {userInfo.first_name}!</div>
         <Button
           variant="contained"
           color="secondary"
           onClick={() => {
-            console.log("Logout action");
+            dispatch(userSlice.actions.logout());
+            history.replace('/');
           }}
           className={classes.btn}
         >

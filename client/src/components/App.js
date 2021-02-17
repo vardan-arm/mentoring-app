@@ -6,11 +6,11 @@ import Profile from "./Profile";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Landing from "./Landing";
+import ProfileEdit from "./ProfileEdit";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    // width: '1200px'
-    // width: '100%'
+    margin: '0 32px',
   },
 }));
 
@@ -26,6 +26,7 @@ function App() {
             <Route exact path={"/"} component={Landing} />
             <Route exact path={"/registration"} component={Registration} />
             <Route exact path={"/profile/:userId"} component={Profile} />
+            <Route exact path={"/profile/:userId/manage"} component={ProfileEdit} />
           </div>
         </div>
       </BrowserRouter>

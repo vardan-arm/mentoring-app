@@ -42,7 +42,7 @@ const LoginDialog = () => {
 
   const isLoginDialogOpened = useSelector(state => getIsLoginDialogOpened(state));
   const generalErrorInfo = useSelector(state => getErrorInfo(state));
-console.log({generalErrorInfo});
+
   const onSubmit = (email) => {
     // console.log('validated', email);
     dispatch(doLogin(email));

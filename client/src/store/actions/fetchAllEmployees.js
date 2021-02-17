@@ -1,6 +1,6 @@
 import generalSlice from "../general";
 
-export const fetchEmployees = () => {
+export const fetchAllEmployees = () => {
   return async (dispatch) => {
     dispatch(generalSlice.actions.setIsLoading(true));
 

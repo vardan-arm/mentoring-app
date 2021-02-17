@@ -18,9 +18,10 @@ export const saveUserData = () => {
       });
       const { data } = await response.json();
 
-      console.log("data received from backend", data.userId);
+      console.log("data received from backend", data.user.userId);
       dispatch(generalSlice.actions.setIsSuccess());
-      dispatch(generalSlice.actions.setRedirectUrl(`/profile/${data.userId}`));
+      dispatch(userSlice.actions.updateInfo(data.user));
+      dispatch(generalSlice.actions.setRedirectUrl(`/profile/${data.user.userId}`));
 
       // cleanup form info in store
       dispatch(formSlice.actions.clearData());

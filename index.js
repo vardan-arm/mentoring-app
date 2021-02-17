@@ -30,15 +30,18 @@ app.get("/api/employees", async (req, res) => {
   }
 });
 
-app.post("/api/saveUserData", (req, res) => {
+app.post("/api/saveUserData", async (req, res) => {
   const data = req.body;
   const validationError = validateUserData(data);
 
   if (!validationError) {
     const userId = registerUser(data);
+    const user = await getProfileData(userId);
 
     const { ok } = HTTP_STATUSES;
-    res.status(ok.code).send({ data: { userId } });
+    // res.status(ok.code).send({ data: { userId } });
+    // res.status(ok.code).send({ data: { userId } });
+    res.status(ok.code).send({ data: { user } });
   } else {
     const { unprocessableEntity } = HTTP_STATUSES;
     res
