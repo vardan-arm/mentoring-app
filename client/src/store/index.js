@@ -1,13 +1,21 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import reduxThunk from "redux-thunk";
 
-import userReducer from "./reducers/userReducer";
+// import userReducer from "./DELETE_reducers/userReducer";
+// import formReducer from "./DELETE_reducers/formReducer";
+import userSlice from "./user";
+import formSlice from "./form";
+import generalSlice from "./general";
 
 const store = configureStore({
   reducer: {
-    user: userReducer,
+    // user: userReducer,
+    general: generalSlice.reducer,
+    user: userSlice.reducer,
+    form: formSlice.reducer,
   },
-  middleware: [reduxThunk],
+  // preloadedState: {},
+  middleware: [...getDefaultMiddleware(), reduxThunk],
   devTools: true,
 });
 
