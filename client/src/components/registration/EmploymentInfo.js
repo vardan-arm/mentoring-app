@@ -7,30 +7,27 @@ import formSlice from "../../store/form";
 import { useDispatch, useSelector } from "react-redux";
 import { getForm } from "../../store/selectors/form";
 import WizardStepContainer from "../common/WizardStepContainer";
-import { useEffect } from "react";
-import { fetchEmployees } from "../../store/actions/fetchEmployees";
 
-/*const useStyles = makeStyles({
-  prevBtn: {
-  },
-  nextBtn: {
+const useStyles = makeStyles({
+  inputField: {
+    marginRight: 16,
+    marginLeft: 16,
   },
 });
-*/
 
 const EmploymentInfo = ({ handleBack, handleNext }) => {
-  const { register, handleSubmit, control, watch, errors } = useForm();
+  const classes = useStyles();
+
+  const { handleSubmit, control, errors } = useForm();
 
   const dispatch = useDispatch();
 
   const existingFormData = useSelector((state) => getForm(state));
-  console.log({ existingFormData });
+
   const onSubmit = (data) => {
     dispatch(formSlice.actions.updateData(data));
     handleNext();
   };
-
-  // TODO: do backend validation for form data, including field length, etc.
 
   // TODO: seems this is useful for both frontend validation and handling errors coming from backend:
   //  https://medium.com/@andresss/using-material-ui-with-react-hook-form-is-this-simple-d8383941fafe
@@ -54,6 +51,7 @@ const EmploymentInfo = ({ handleBack, handleNext }) => {
                 label="Department"
                 variant="outlined"
                 error={!!errors.department}
+                className={classes.inputField}
               />
             }
             control={control}
@@ -76,6 +74,7 @@ const EmploymentInfo = ({ handleBack, handleNext }) => {
                 label="Job Title"
                 variant="outlined"
                 error={!!errors.jobTitle}
+                className={classes.inputField}
               />
             }
             control={control}

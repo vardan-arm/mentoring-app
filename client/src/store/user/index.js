@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  userInfo: {},
+  // userInfo: {},
   // group: [],
 };
 
@@ -15,18 +15,9 @@ const userSlice = createSlice({
         ...payload,
       };
     },
-    logout(state) {
-      // state.value--
-      console.log("logout reducer");
-      return {
-        ...state,
-        userInfo: initialState.userInfo,
-        group: initialState.group,
-      };
+    logout() {
+      return initialState;
     },
-    /*incrementByAmount(state, action) {
-      state.value += action.payload
-    },*/
   },
 });
 

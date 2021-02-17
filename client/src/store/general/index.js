@@ -6,6 +6,7 @@ const initialState = {
   errorMessage: "",
   redirectUrl: "", // whenever this is not empty string, the page will be redirected
   allEmployees: [],
+  isLoginDialogOpened: false,
 };
 
 const generalSlice = createSlice({
@@ -29,7 +30,11 @@ const generalSlice = createSlice({
       ...state,
       isLoading: false,
       hasErrors: true,
-      errorMessage: payload.message,
+      errorMessage: payload,
+    }),
+    setIsLoginDialogOpened: (state, {payload}) => ({
+      ...state,
+      isLoginDialogOpened: payload
     }),
     setRedirectUrl: (state, { payload }) => ({
       ...state,

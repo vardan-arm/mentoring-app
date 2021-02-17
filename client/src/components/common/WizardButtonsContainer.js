@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row-reverse",
     justifyContent: "space-between",
     alignItems: "center",
+    marginTop: 24,
 
     // Show Next/Previous buttons in right order
     "& :nth-child(1)": { order: 2 },

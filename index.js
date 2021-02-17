@@ -35,7 +35,6 @@ app.post("/api/saveUserData", (req, res) => {
   const validationError = validateUserData(data);
 
   if (!validationError) {
-    // validated
     const userId = registerUser(data);
 
     const { ok } = HTTP_STATUSES;
@@ -50,14 +49,23 @@ app.post("/api/saveUserData", (req, res) => {
 
 app.post("/api/login", async (req, res) => {
   const employees = await getEmployees();
-
+// console.log('employees', employees);
+  console.log('>>>>', req.body.email);
   if (employees) {
     // Imitation of searching user in DB
     const loggedInUser = employees.find(
-      (employee) => employee.email === req.email
+      (employee) => employee.email === req.body.email
     );
+
     if (loggedInUser) {
-      res.redirect("/profile");
+      // res.redirect("/profile");
+      console.log({ loggedInUser });
+      // (Do backend-related stuff for login here...)
+      // and send user data to frontend
+      // const userId = registerUser(loggedInUser);
+
+      const { ok } = HTTP_STATUSES;
+      res.status(ok.code).send({ data: loggedInUser });
     } else {
       const { unauthorized } = HTTP_STATUSES;
       res.status(unauthorized.code).send({ error: unauthorized.message });

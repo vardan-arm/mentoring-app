@@ -1,5 +1,6 @@
 import userSlice from "../user";
 import generalSlice from "../general";
+import { batch } from 'react-redux'
 
 export const fetchUserData = (userId) => {
   return async (dispatch) => {
@@ -9,9 +10,10 @@ export const fetchUserData = (userId) => {
       const response = await fetch(`/api/profileData/${userId}`);
       const { data } = await response.json();
 
-      console.log("data received from backend", data);
-      dispatch(generalSlice.actions.setIsSuccess());
-      dispatch(userSlice.actions.updateInfo(data));
+      batch(() => {
+        dispatch(generalSlice.actions.setIsSuccess());
+        dispatch(userSlice.actions.updateInfo(data));
+      })
     } catch (error) {
       dispatch(generalSlice.actions.setIsFailure(error));
     }

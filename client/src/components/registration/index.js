@@ -15,6 +15,7 @@ import GroupManagement from "./GroupManagement";
 
 const useStyles = makeStyles((theme) => ({
   container: {
+    // width: '70%',
     margin: "12px 16px 24px",
   },
   title: {

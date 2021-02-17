@@ -1,27 +1,19 @@
 import { useForm, Controller } from "react-hook-form";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import WizardButtonsContainer from "../common/WizardButtonsContainer";
 import { makeStyles } from "@material-ui/core/styles";
 import formSlice from "../../store/form";
 import { useDispatch, useSelector } from "react-redux";
-import { getForm } from "../../store/selectors/form";
 import WizardStepContainer from "../common/WizardStepContainer";
 import React, { useState, useEffect } from "react";
 import { fetchEmployees } from "../../store/actions/fetchEmployees";
 import { getAllEmployees } from "../../store/selectors/general";
-// import DnDList from "../DnDList";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { getUserGroup } from "../../store/selectors/form";
+import { getForm, getUserGroup } from "../../store/selectors/form";
 import { MAX_ALLOWED_USERS_IN_GROUP } from "../../utils/constants";
-import userSlice from "../../store/user";
 import { saveUserData } from "../../store/actions/saveUserData";
 
 const useStyles = makeStyles({
-  prevBtn: {
-    // position: "absolute",
-    // right: 12,
-  },
   nextBtn: {
     position: "absolute",
     right: 12,
@@ -29,10 +21,13 @@ const useStyles = makeStyles({
   usersContainer: {
     minHeight: 100,
     minWidth: 500,
-    border: "gray 1px solid",
+    border: "#c5cbd0 1px solid",
+    marginRight: 32,
+    borderRadius: 20,
   },
   dndContainer: {
     display: "flex",
+    marginLeft: 16,
   },
   list: {
     padding: 8,
@@ -45,7 +40,6 @@ const useStyles = makeStyles({
     background: "#fbf7db",
   },
   listDraggingOver: {
-    // background: "lightblue",
     background: "#cbf3c1",
   },
 });
@@ -59,14 +53,13 @@ const GroupManagement = ({ handleBack, handleNext }) => {
     dispatch(fetchEmployees());
   }, []);
 
-  // TODO: this info should be received from backend -> redux
-  const userEmail = "msealey0@techcrunch.com";
+  // TODO: this email info should be received from backend -> redux
+  // const userEmail = "msealey0@techcrunch.com";
+  const existingFormData = useSelector((state) => getForm(state));
+  const groupedEmployees = useSelector((state) => getUserGroup(state));
 
-  const groupedEmployees = useSelector((state) =>
-    getUserGroup(state, userEmail)
-  );
   const allEmployees = useSelector((state) => getAllEmployees(state));
-  console.log({ allEmployees });
+
   const [localGroupedEmployees, setLocalGroupedEmployees] = useState([]);
   const [localAllEmployees, setLocalAllEmployees] = useState([]);
 
@@ -74,11 +67,12 @@ const GroupManagement = ({ handleBack, handleNext }) => {
     const groupedEmployeesIds = groupedEmployees.map((grpEmpl) => grpEmpl.id);
     // Remove all the employees coming from Redux from already grouped ones
     const filteredAllEmployees = allEmployees.filter(
-      (emp) => !groupedEmployeesIds.includes(emp.id)
+      (employee) =>
+        !groupedEmployeesIds.includes(employee.id) &&
+        employee.email !== existingFormData.email
     );
 
     setLocalGroupedEmployees(groupedEmployees);
-    // setLocalAllEmployees(allEmployees);
     setLocalAllEmployees(filteredAllEmployees);
 
     console.log("in effect", groupedEmployees);
@@ -93,18 +87,11 @@ const GroupManagement = ({ handleBack, handleNext }) => {
     dispatch(saveUserData());
   };
 
-  // TODO: do backend validation for form data, including field length, etc.
-
   // TODO: seems this is useful for both frontend validation and handling errors coming from backend:
   //  https://medium.com/@andresss/using-material-ui-with-react-hook-form-is-this-simple-d8383941fafe
 
-  console.log("employee errors:", errors);
-
   /*
-   *
-   *
-   * Starting DnD stuff
-   *
+   * DnD stuff
    * */
 
   const getList = (id) =>
@@ -131,7 +118,6 @@ const GroupManagement = ({ handleBack, handleNext }) => {
         setLocalGroupedEmployees(items);
 
         // store changes in Redux
-        // dispatch(userSlice.actions.updateInfo({group: items}))
         dispatch(formSlice.actions.updateData({ group: items }));
       }
     } else {
@@ -155,15 +141,9 @@ const GroupManagement = ({ handleBack, handleNext }) => {
       setLocalAllEmployees(result.allEmployees);
 
       // store changes in Redux
-      // dispatch(userSlice.actions.updateInfo({group: result.groupedEmployees}))
       dispatch(
         formSlice.actions.updateData({ group: result.groupedEmployees })
       );
-
-      /*
-      // store changes in Redux
-      dispatch(userSlice.actions.updateInfo({group: result.groupedEmployees}))
-      */
     }
   };
 
@@ -173,6 +153,7 @@ const GroupManagement = ({ handleBack, handleNext }) => {
     padding: 16,
     margin: `0 0 8px 0`,
     color: "white",
+    borderRadius: 20,
 
     // change background colour if dragging
     background: isDragging ? "#30969a" : "#136467",

@@ -11,3 +11,17 @@ export const getRedirectUrl = createSelector(
   getGeneral,
   (general) => general.redirectUrl
 );
+
+export const getIsLoginDialogOpened = createSelector(
+  getGeneral,
+  general => general.isLoginDialogOpened
+);
+
+export const getErrorInfo = createSelector(
+  getGeneral,
+  general => ({
+
+      hasErrors: general.hasErrors,
+      errorMessage: general.errorMessage
+    })
+)

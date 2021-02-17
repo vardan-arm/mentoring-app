@@ -7,6 +7,8 @@ import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getRedirectUrl } from "../store/selectors/general";
 import generalSlice from "../store/general";
+import { getUser } from "../store/selectors/user";
+import LoginDialog from "./LoginDialog";
 
 // TODO: Use `stepper` for user's steps
 
@@ -14,6 +16,7 @@ const useStyles = makeStyles({
   container: {
     margin: "12px auto 24px",
     textAlign: "right",
+    // width: '70%'
   },
   btn: {
     margin: "12px 16px",
@@ -21,14 +24,19 @@ const useStyles = makeStyles({
 });
 
 const Header = () => {
-  const [userInfo, setUserInfo] = useState(null);
+  // const [userInfo, setUserInfo] = useState(null);
 
   const classes = useStyles();
   const location = useLocation();
 
-  useEffect(() => {
+  // const [openLoginDialog, setOpenLoginDialog] = useState(false);
+
+  const userInfo = useSelector((state) => getUser(state));
+
+  /*useEffect(() => {
+
     setUserInfo(false);
-  }, []);
+  }, []);*/
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -40,17 +48,37 @@ const Header = () => {
   }
 
   let output = "";
-  // if (userInfo === null) {
-  if (location.pathname === "/registration" || userInfo === null) {
+
+  // if (location.pathname === "/registration" || userInfo === null) {
+  if (location.pathname === "/registration") {
     return "";
-  } else if (userInfo === false) {
+  } else if (userInfo.id) {
+    // logged in
+    output = (
+      <>
+        <div>Hi, {userInfo.first_name}!</div>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            console.log("Logout action");
+          }}
+          className={classes.btn}
+        >
+          Logout
+        </Button>
+      </>
+    );
+  } else {
     output = (
       <>
         <Button
           variant="contained"
           color="primary"
           onClick={() => {
-            console.log("login action");
+            // console.log("login action");
+            // setOpenLoginDialog(true);
+            dispatch(generalSlice.actions.setIsLoginDialogOpened(true))
           }}
           className={classes.btn}
         >
@@ -70,7 +98,7 @@ const Header = () => {
         </Button>
       </>
     );
-  } else {
+  } /*else {
     output = (
       <>
         <div>Hi, USER_NAME !</div>
@@ -86,11 +114,12 @@ const Header = () => {
         </Button>
       </>
     );
-  }
+  }*/
 
   return (
     <Paper className={classes.container} elevation={1}>
       <Grid>{output}</Grid>
+        <LoginDialog />
     </Paper>
   );
 };

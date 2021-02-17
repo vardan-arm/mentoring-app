@@ -5,10 +5,12 @@ import Registration from "./registration";
 import Profile from "./Profile";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
+import Landing from "./Landing";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     // width: '1200px'
+    // width: '100%'
   },
 }));
 
@@ -19,18 +21,12 @@ function App() {
     <div className={"container"}>
       <BrowserRouter>
         <div>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            className={classes.container}
-          >
+          <div className={classes.container}>
             <Header />
-            {/*<Route exact path={'/'} component={Landing} />*/}
+            <Route exact path={"/"} component={Landing} />
             <Route exact path={"/registration"} component={Registration} />
             <Route exact path={"/profile/:userId"} component={Profile} />
-          </Grid>
+          </div>
         </div>
       </BrowserRouter>
     </div>
