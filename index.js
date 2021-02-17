@@ -1,14 +1,21 @@
 require("./storageSetup");
+
+const bodyParser = require("body-parser");
+const express = require("express");
+
 const getEmployees = require("./utils/getEmployees");
 const { getProfileData, setProfileData } = require("./utils/getProfileData");
+const registerUser = require("./utils/registerUser");
+const validateUserData = require("./utils/validateUserData");
 const { HTTP_STATUSES } = require("./utils/constants");
 
-const express = require("express");
 const app = express();
 
 // app.get("/api/users", (req, res) => {
 //   res.send(["user 1", "user 2"]);
 // });
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/api/employees", async (req, res) => {
   const employees = await getEmployees();
@@ -23,27 +30,22 @@ app.get("/api/employees", async (req, res) => {
   }
 });
 
-app.post("/api/register", (req, res) => {
-  // TODO: Validate received data
-  const data = req.data;
+app.post("/api/saveUserData", (req, res) => {
+  const data = req.body;
+  const validationError = validateUserData(data);
 
-  // TODO: remove this hardcoding
-  if (true) {
-    // all data is validated
+  if (!validationError) {
+    // validated
+    const userId = registerUser(data);
 
-    const userId = registerUser(data); // remember that for `userId` we use his email
-
-    res.redirect(`/profile/${userId}`);
     const { ok } = HTTP_STATUSES;
-    res.status(ok.code).send({ data: "" });
+    res.status(ok.code).send({ data: { userId } });
   } else {
     const { unprocessableEntity } = HTTP_STATUSES;
     res
       .status(unprocessableEntity.code)
       .send({ error: unprocessableEntity.message });
   }
-  const result = {};
-  res.send();
 });
 
 app.post("/api/login", async (req, res) => {
@@ -68,10 +70,12 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-app.get("/api/profileData", (req, res) => {
-  const { userId } = req;
+// app.get("/api/profileData", (req, res) => {
+app.get("/api/profileData/:userId", async (req, res) => {
+  const { userId } = req.params;
 
-  const profileData = getProfileData(userId);
+  const profileData = await getProfileData(userId);
+
   if (profileData) {
     res.status(HTTP_STATUSES.ok.code).send({ data: profileData });
   } else {

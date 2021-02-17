@@ -55,7 +55,7 @@ const Registration = () => {
           handleBack={() => setActiveStep((activeStep) => activeStep - 1)}
           handleNext={() => {
             // TODO: here we need to do API call and save all data
-            setActiveStep((activeStep) => activeStep + 1)
+            setActiveStep((activeStep) => activeStep + 1);
           }}
         />
       )}

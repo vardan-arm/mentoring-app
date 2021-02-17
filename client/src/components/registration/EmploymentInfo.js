@@ -4,11 +4,11 @@ import Button from "@material-ui/core/Button";
 import WizardButtonsContainer from "../common/WizardButtonsContainer";
 import { makeStyles } from "@material-ui/core/styles";
 import formSlice from "../../store/form";
-import {useDispatch, useSelector} from "react-redux";
-import {getForm} from "../../store/selectors/form";
+import { useDispatch, useSelector } from "react-redux";
+import { getForm } from "../../store/selectors/form";
 import WizardStepContainer from "../common/WizardStepContainer";
-import {useEffect} from "react";
-import {fetchEmployees} from "../../store/actions/fetchEmployees";
+import { useEffect } from "react";
+import { fetchEmployees } from "../../store/actions/fetchEmployees";
 
 /*const useStyles = makeStyles({
   prevBtn: {
@@ -24,7 +24,7 @@ const EmploymentInfo = ({ handleBack, handleNext }) => {
   const dispatch = useDispatch();
 
   const existingFormData = useSelector((state) => getForm(state));
-console.log({existingFormData});
+  console.log({ existingFormData });
   const onSubmit = (data) => {
     dispatch(formSlice.actions.updateData(data));
     handleNext();
@@ -41,21 +41,23 @@ console.log({existingFormData});
 
   return (
     <>
-      <WizardStepContainer title={'Employment Information'}>
+      <WizardStepContainer title={"Employment Information"}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Controller
             name="department"
             as={
               <TextField
                 id="department"
-                helperText={errors.department ? errors.department.message : null}
+                helperText={
+                  errors.department ? errors.department.message : null
+                }
                 label="Department"
                 variant="outlined"
                 error={!!errors.department}
               />
             }
             control={control}
-            defaultValue={existingFormData.department || ''}
+            defaultValue={existingFormData.department || ""}
             rules={{
               required: true,
               pattern: {
@@ -77,7 +79,7 @@ console.log({existingFormData});
               />
             }
             control={control}
-            defaultValue={existingFormData.jobTitle || ''}
+            defaultValue={existingFormData.jobTitle || ""}
             rules={{
               required: true,
               pattern: {
@@ -88,11 +90,7 @@ console.log({existingFormData});
           />
 
           <WizardButtonsContainer>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleBack}
-            >
+            <Button variant="contained" color="primary" onClick={handleBack}>
               Previous
             </Button>
             <Button

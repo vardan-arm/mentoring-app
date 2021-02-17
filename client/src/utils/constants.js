@@ -1,0 +1,1 @@
+export const MAX_ALLOWED_USERS_IN_GROUP = 5;

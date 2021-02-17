@@ -4,12 +4,18 @@ import Button from "@material-ui/core/Button";
 import WizardButtonsContainer from "../common/WizardButtonsContainer";
 import { makeStyles } from "@material-ui/core/styles";
 import formSlice from "../../store/form";
-import {useDispatch, useSelector} from "react-redux";
-import {getForm} from "../../store/selectors/form";
+import { useDispatch, useSelector } from "react-redux";
+import { getForm } from "../../store/selectors/form";
 import WizardStepContainer from "../common/WizardStepContainer";
-import {useEffect} from "react";
-import {fetchEmployees} from "../../store/actions/fetchEmployees";
-import {getAllEmployees} from "../../store/selectors/general";
+import React, { useState, useEffect } from "react";
+import { fetchEmployees } from "../../store/actions/fetchEmployees";
+import { getAllEmployees } from "../../store/selectors/general";
+// import DnDList from "../DnDList";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { getUserGroup } from "../../store/selectors/form";
+import { MAX_ALLOWED_USERS_IN_GROUP } from "../../utils/constants";
+import userSlice from "../../store/user";
+import { saveUserData } from "../../store/actions/saveUserData";
 
 const useStyles = makeStyles({
   prevBtn: {
@@ -20,10 +26,32 @@ const useStyles = makeStyles({
     position: "absolute",
     right: 12,
   },
+  usersContainer: {
+    minHeight: 100,
+    minWidth: 500,
+    border: "gray 1px solid",
+  },
+  dndContainer: {
+    display: "flex",
+  },
+  list: {
+    padding: 8,
+    width: 250,
+  },
+  groupedUsersList: {
+    background: "#e5f9e0",
+  },
+  allUserList: {
+    background: "#fbf7db",
+  },
+  listDraggingOver: {
+    // background: "lightblue",
+    background: "#cbf3c1",
+  },
 });
 
 const GroupManagement = ({ handleBack, handleNext }) => {
-  const { register, handleSubmit, control, watch, errors } = useForm();
+  const { handleSubmit, errors } = useForm();
 
   const dispatch = useDispatch();
 
@@ -31,14 +59,38 @@ const GroupManagement = ({ handleBack, handleNext }) => {
     dispatch(fetchEmployees());
   }, []);
 
-  const existingFormData = useSelector((state) => getForm(state));
-  const allEmployees = useSelector(state => getAllEmployees(state));
+  // TODO: this info should be received from backend -> redux
+  const userEmail = "msealey0@techcrunch.com";
 
-  console.log({allEmployees});
+  const groupedEmployees = useSelector((state) =>
+    getUserGroup(state, userEmail)
+  );
+  const allEmployees = useSelector((state) => getAllEmployees(state));
+  console.log({ allEmployees });
+  const [localGroupedEmployees, setLocalGroupedEmployees] = useState([]);
+  const [localAllEmployees, setLocalAllEmployees] = useState([]);
+
+  useEffect(() => {
+    const groupedEmployeesIds = groupedEmployees.map((grpEmpl) => grpEmpl.id);
+    // Remove all the employees coming from Redux from already grouped ones
+    const filteredAllEmployees = allEmployees.filter(
+      (emp) => !groupedEmployeesIds.includes(emp.id)
+    );
+
+    setLocalGroupedEmployees(groupedEmployees);
+    // setLocalAllEmployees(allEmployees);
+    setLocalAllEmployees(filteredAllEmployees);
+
+    console.log("in effect", groupedEmployees);
+  }, [allEmployees, groupedEmployees]);
+
+  // console.log({ groupedEmployees });
+  // console.log({ allEmployees });
 
   const onSubmit = (data) => {
-    dispatch(formSlice.actions.updateData(data));
-    handleNext();
+    // dispatch(userSlice.actions.updateInfo(data));
+    // handleNext();
+    dispatch(saveUserData());
   };
 
   // TODO: do backend validation for form data, including field length, etc.
@@ -48,52 +100,210 @@ const GroupManagement = ({ handleBack, handleNext }) => {
 
   console.log("employee errors:", errors);
 
+  /*
+   *
+   *
+   * Starting DnD stuff
+   *
+   * */
+
+  const getList = (id) =>
+    id === "groupedEmployees" ? localGroupedEmployees : localAllEmployees;
+
+  const onDragEnd = (result) => {
+    const { source, destination } = result;
+
+    // dropped outside the list
+    if (!destination) {
+      return;
+    }
+
+    if (source.droppableId === destination.droppableId) {
+      const items = reorder(
+        getList(source.droppableId),
+        source.index,
+        destination.index
+      );
+
+      if (source.droppableId === "allEmployees") {
+        setLocalAllEmployees(items);
+      } else {
+        setLocalGroupedEmployees(items);
+
+        // store changes in Redux
+        // dispatch(userSlice.actions.updateInfo({group: items}))
+        dispatch(formSlice.actions.updateData({ group: items }));
+      }
+    } else {
+      // Don't let adding more than allowed users in one group
+      if (
+        source.droppableId === "allEmployees" &&
+        destination.droppableId === "groupedEmployees" &&
+        localGroupedEmployees.length >= MAX_ALLOWED_USERS_IN_GROUP
+      ) {
+        return;
+      }
+
+      const result = move(
+        getList(source.droppableId),
+        getList(destination.droppableId),
+        source,
+        destination
+      );
+
+      setLocalGroupedEmployees(result.groupedEmployees);
+      setLocalAllEmployees(result.allEmployees);
+
+      // store changes in Redux
+      // dispatch(userSlice.actions.updateInfo({group: result.groupedEmployees}))
+      dispatch(
+        formSlice.actions.updateData({ group: result.groupedEmployees })
+      );
+
+      /*
+      // store changes in Redux
+      dispatch(userSlice.actions.updateInfo({group: result.groupedEmployees}))
+      */
+    }
+  };
+
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: "none",
+    padding: 16,
+    margin: `0 0 8px 0`,
+    color: "white",
+
+    // change background colour if dragging
+    background: isDragging ? "#30969a" : "#136467",
+
+    // styles we need to apply on draggables
+    ...draggableStyle,
+  });
+
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+  };
+
+  /**
+   * Moves an item from one list to another list.
+   */
+  const move = (source, destination, droppableSource, droppableDestination) => {
+    const sourceClone = Array.from(source);
+    const destClone = Array.from(destination);
+    const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+    destClone.splice(droppableDestination.index, 0, removed);
+
+    const result = {};
+    result[droppableSource.droppableId] = sourceClone;
+    result[droppableDestination.droppableId] = destClone;
+
+    return result;
+  };
+
   const classes = useStyles();
 
   return (
     <>
-      <WizardStepContainer title={'Create Group'}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          Coming soon
-          {/*<Controller
-            name="department"
-            as={
-              <TextField
-                id="department"
-                helperText={errors.department ? errors.department.message : null}
-                label="Department"
-                variant="outlined"
-                error={!!errors.department}
-              />
-            }
-            control={control}
-            defaultValue={existingFormData.department || ''}
-            rules={{
-              required: true,
-              pattern: {
-                value: /^[A-Za-z]{1,30}$/i,
-                message: "Invalid Department",
-              },
-            }}
-          />*/}
+      <WizardStepContainer title={"Create Group"}>
+        <div className={classes.dndContainer}>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="groupedEmployees">
+              {(provided, snapshot) => {
+                const extraClass = snapshot.isDraggingOver
+                  ? classes.listDraggingOver
+                  : "";
 
-          <WizardButtonsContainer>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleBack}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSubmit(onSubmit)}
-            >
-              Finish
-            </Button>
-          </WizardButtonsContainer>
-        </form>
+                return (
+                  <div
+                    ref={provided.innerRef}
+                    className={`${classes.usersContainer} ${classes.list} ${classes.groupedUsersList} ${extraClass}`}
+                  >
+                    {localGroupedEmployees.map((item, index) => {
+                      return (
+                        <Draggable
+                          key={item.id}
+                          draggableId={item.id}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={getItemStyle(
+                                snapshot.isDragging,
+                                provided.draggableProps.style
+                              )}
+                            >
+                              {item.first_name} {item.last_name}, {item.email}
+                            </div>
+                          )}
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </div>
+                );
+              }}
+            </Droppable>
+            <Droppable droppableId="allEmployees">
+              {(provided, snapshot) => {
+                const extraClass = snapshot.isDraggingOver
+                  ? classes.listDraggingOver
+                  : "";
+
+                return (
+                  <div
+                    ref={provided.innerRef}
+                    className={`${classes.usersContainer} ${classes.list} ${classes.allUserList} ${extraClass}`}
+                  >
+                    {localAllEmployees.map((item, index) => (
+                      <Draggable
+                        key={item.id}
+                        draggableId={item.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                          >
+                            {item.first_name} {item.last_name}, {item.email}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                );
+              }}
+            </Droppable>
+          </DragDropContext>
+        </div>
+
+        <WizardButtonsContainer>
+          <Button variant="contained" color="primary" onClick={handleBack}>
+            Previous
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit(onSubmit)}
+          >
+            Finish
+          </Button>
+        </WizardButtonsContainer>
       </WizardStepContainer>
     </>
   );

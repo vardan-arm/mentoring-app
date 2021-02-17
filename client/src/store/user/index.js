@@ -1,18 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {};
+const initialState = {
+  userInfo: {},
+  // group: [],
+};
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    updateInfo(state, action) {
-      // state.value++
-      console.log("updateInfo reducer", state);
+    updateInfo(state, { payload }) {
+      return {
+        ...state,
+        ...payload,
+      };
     },
     logout(state) {
       // state.value--
       console.log("logout reducer");
+      return {
+        ...state,
+        userInfo: initialState.userInfo,
+        group: initialState.group,
+      };
     },
     /*incrementByAmount(state, action) {
       state.value += action.payload

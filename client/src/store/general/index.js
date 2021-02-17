@@ -3,37 +3,43 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isLoading: false,
   hasErrors: false,
-  errorMessage: '',
-  allEmployees: []
-}
+  errorMessage: "",
+  redirectUrl: "", // whenever this is not empty string, the page will be redirected
+  allEmployees: [],
+};
 
 const generalSlice = createSlice({
-  name: 'general',
+  name: "general",
   initialState,
   reducers: {
-    setIsLoading: (state, {payload}) => {
+    setIsLoading: (state, { payload }) => {
       return {
         ...state,
-        isLoading: payload
-      }
+        isLoading: payload,
+      };
     },
     setIsSuccess: (state) => ({
       ...state,
       isLoading: false,
       hasErrors: false,
-      errorMessage: ''
+      errorMessage: "",
+      allEmployees: [],
     }),
-    setIsFailure: (state, {payload}) => ({
+    setIsFailure: (state, { payload }) => ({
       ...state,
       isLoading: false,
       hasErrors: true,
-      errorMessage: payload.message
+      errorMessage: payload.message,
     }),
-    setAllEmployees: (state, {payload}) => ({
+    setRedirectUrl: (state, { payload }) => ({
       ...state,
-      allEmployees: payload
-    })
-  }
-})
+      redirectUrl: payload,
+    }),
+    setAllEmployees: (state, { payload }) => ({
+      ...state,
+      allEmployees: payload,
+    }),
+  },
+});
 
 export default generalSlice;

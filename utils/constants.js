@@ -17,6 +17,8 @@ const HTTP_STATUSES = {
   },
 };
 
+const MAX_ALLOWED_USERS_IN_GROUP = 5; // this should be in one place actually and possibly be sent to client if required
+
 module.exports = {
   HTTP_STATUSES,
 };

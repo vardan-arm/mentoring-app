@@ -1,10 +1,13 @@
-const getProfileData = (userId) => {};
+// TODO: Do I need them at all?
+const getEmployees = require("./getEmployees");
 
-const registerUser = (data) => {
-  // Let's use email as user Id for this task
-  return userId;
+const getProfileData = async (userId) => {
+  const allEmployees = await getEmployees();
+  const employee = allEmployees.find((employee) => employee.id === userId);
+
+  return employee;
 };
 
 const setProfileData = (data) => {};
 
-module.exports = { getProfileData, registerUser, setProfileData };
+module.exports = { getProfileData, setProfileData };

@@ -1,4 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
+import { getUser } from "./user";
 
 // export const getForm = createSelector(state => state.form);
 /*export const getForm = createSelector(state => {
@@ -6,4 +7,8 @@ import { createSelector } from "@reduxjs/toolkit";
   // return state.form
   return state
 });*/
-export const getForm = state => state.form;
+export const getForm = (state) => state.form;
+
+export const getUserGroup = createSelector(getForm, (form) => {
+  return form.group;
+});

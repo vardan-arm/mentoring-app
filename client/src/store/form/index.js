@@ -1,6 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {};
+const initialState = {
+  // allEmployees: [],
+  group: [],
+};
 
 const formSlice = createSlice({
   name: "form",
@@ -11,14 +14,14 @@ const formSlice = createSlice({
     },
     updateData(state, { payload }) {
       // state.value++
-      console.log("form: updateData reducer");
+      console.log("form: updateData reducer", payload);
       return {
         ...state,
         ...payload,
       };
     },
-    clearData(state) {
-      console.log("form: clearData reducer");
+    clearData() {
+      return initialState;
     },
   },
 });

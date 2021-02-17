@@ -1,6 +1,8 @@
 const csv = require("csv-parser");
 const fs = require("fs");
 
+const generateId = require("../utils/generateId");
+
 // const getEmployees = async () => {
 const getEmployees = () => {
   return new Promise((resolve) => {
@@ -17,7 +19,10 @@ const getEmployees = () => {
         fs.createReadStream("./mocks/employees cvs.csv")
           .pipe(csv())
           .on("data", (row) => {
-            employees.push(row);
+            employees.push({
+              ...row,
+              id: generateId(),
+            });
           })
           .on("end", () => {
             // Cache results locally

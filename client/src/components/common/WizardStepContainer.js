@@ -1,14 +1,14 @@
 import Paper from "@material-ui/core/Paper";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
   container: {
     margin: 16,
-    padding: 16
+    padding: 16,
   },
 });
 
-const WizardStepContainer = ({title, children}) => {
+const WizardStepContainer = ({ title, children }) => {
   const classes = useStyles();
 
   return (
@@ -17,6 +17,6 @@ const WizardStepContainer = ({title, children}) => {
       {children}
     </Paper>
   );
-}
+};
 
 export default WizardStepContainer;
