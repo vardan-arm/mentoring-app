@@ -7,18 +7,21 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { doLogin } from "../store/actions/doLogin";
 import { EMAIL_VALIDATION_REGEX } from "../utils/constants";
-import {Controller, useForm} from "react-hook-form";
-import {getErrorInfo, getIsLoginDialogOpened} from "../store/selectors/general";
+import { Controller, useForm } from "react-hook-form";
+import {
+  getErrorInfo,
+  getIsLoginDialogOpened,
+} from "../store/selectors/general";
 import generalSlice from "../store/general";
 
 const useStyles = makeStyles({
   inputField: {
-    '& #email-helper-text': {
-      color: '#f44336'
-    }
+    "& #email-helper-text": {
+      color: "#f44336",
+    },
   },
 });
 
@@ -37,22 +40,20 @@ const LoginDialog = () => {
   const dispatch = useDispatch();
 
   const handleClose = () => {
-    dispatch(generalSlice.actions.setIsLoginDialogOpened(false))
-  }
+    dispatch(generalSlice.actions.setIsLoginDialogOpened(false));
+  };
 
-  const isLoginDialogOpened = useSelector(state => getIsLoginDialogOpened(state));
-  const generalErrorInfo = useSelector(state => getErrorInfo(state));
+  const isLoginDialogOpened = useSelector((state) =>
+    getIsLoginDialogOpened(state)
+  );
+  const generalErrorInfo = useSelector((state) => getErrorInfo(state));
 
   const onSubmit = (email) => {
     // console.log('validated', email);
     dispatch(doLogin(email));
   };
 
-  const {
-    handleSubmit,
-    control,
-    errors,
-  } = useForm();
+  const { handleSubmit, control, errors } = useForm();
 
   return (
     <div>
@@ -73,14 +74,18 @@ const LoginDialog = () => {
               as={
                 <TextField
                   autoFocus
-                  onKeyDown={e => {
+                  onKeyDown={(e) => {
                     // MUI is focused on other element when pressing "Enter". Just ignore the keypress for now.
-                    if (e.code === 'Enter') {
+                    if (e.code === "Enter") {
                       e.preventDefault();
                     }
                   }}
                   id="email"
-                  helperText={errors.email ? errors.email.message : generalErrorInfo.errorMessage || ''}
+                  helperText={
+                    errors.email
+                      ? errors.email.message
+                      : generalErrorInfo.errorMessage || ""
+                  }
                   label="Email"
                   variant="outlined"
                   error={!!errors.email}

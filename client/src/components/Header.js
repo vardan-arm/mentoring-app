@@ -10,7 +10,7 @@ import generalSlice from "../store/general";
 import { getUser } from "../store/selectors/user";
 import LoginDialog from "./LoginDialog";
 import userSlice from "../store/user";
-import {isLocationAllowed} from "../utils/isLocationAllowed";
+import { isLocationAllowed } from "../utils/isLocationAllowed";
 
 // TODO: Use `stepper` for user's steps
 
@@ -38,17 +38,14 @@ const Header = () => {
 
   // Check whether the non-logged in user can visit current page
   if (!userInfo.id && !isLocationAllowed(location.pathname)) {
-    history.replace('/')
+    history.replace("/");
   }
   // const [openLoginDialog, setOpenLoginDialog] = useState(false);
-
 
   /*useEffect(() => {
 
     setUserInfo(false);
   }, []);*/
-
-
 
   const redirectUrl = useSelector((state) => getRedirectUrl(state));
   if (redirectUrl) {
@@ -57,7 +54,7 @@ const Header = () => {
   }
 
   let output = "";
-console.log({userInfo});
+  console.log({ userInfo });
   if (location.pathname === "/registration") {
     return "";
   } else if (userInfo.id) {
@@ -69,7 +66,7 @@ console.log({userInfo});
           color="secondary"
           onClick={() => {
             dispatch(userSlice.actions.logout());
-            history.replace('/');
+            history.replace("/");
           }}
           className={classes.btn}
         >
@@ -86,7 +83,7 @@ console.log({userInfo});
           onClick={() => {
             // console.log("login action");
             // setOpenLoginDialog(true);
-            dispatch(generalSlice.actions.setIsLoginDialogOpened(true))
+            dispatch(generalSlice.actions.setIsLoginDialogOpened(true));
           }}
           className={classes.btn}
         >
@@ -127,7 +124,7 @@ console.log({userInfo});
   return (
     <Paper className={classes.container} elevation={1}>
       <Grid>{output}</Grid>
-        <LoginDialog />
+      <LoginDialog />
     </Paper>
   );
 };

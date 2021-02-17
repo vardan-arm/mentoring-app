@@ -10,7 +10,7 @@ import ProfileEdit from "./ProfileEdit";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    margin: '0 32px',
+    margin: "0 32px",
   },
 }));
 
@@ -26,7 +26,11 @@ function App() {
             <Route exact path={"/"} component={Landing} />
             <Route exact path={"/registration"} component={Registration} />
             <Route exact path={"/profile/:userId"} component={Profile} />
-            <Route exact path={"/profile/:userId/manage"} component={ProfileEdit} />
+            <Route
+              exact
+              path={"/profile/:userId/manage"}
+              component={ProfileEdit}
+            />
           </div>
         </div>
       </BrowserRouter>

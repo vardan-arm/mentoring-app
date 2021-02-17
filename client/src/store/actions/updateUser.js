@@ -2,14 +2,18 @@ import generalSlice from "../general";
 import userSlice from "../user";
 import formSlice from "../form";
 
-export const saveUserData = () => {
+// TODO: implement this!!!
+export const updateUser = () => {
   return async (dispatch, getState) => {
     dispatch(generalSlice.actions.setIsLoading(true));
 
     try {
-      const userData = getState().form;
+      const userData = {
+        ...getState().form,
+        id: getState().user.id
+      };
 
-      const response = await fetch("/api/saveUserData", {
+      const response = await fetch("/api/updateUser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -18,10 +22,11 @@ export const saveUserData = () => {
       });
       const { data } = await response.json();
 
-      console.log("data received from backend", data.user.userId);
       dispatch(generalSlice.actions.setIsSuccess());
       dispatch(userSlice.actions.updateInfo(data.user));
-      dispatch(generalSlice.actions.setRedirectUrl(`/profile/${data.user.userId}`));
+      dispatch(
+        generalSlice.actions.setRedirectUrl(`/profile/${data.user.userId}`)
+      );
 
       // cleanup form info in store
       dispatch(formSlice.actions.clearData());

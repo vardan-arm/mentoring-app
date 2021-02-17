@@ -32,9 +32,9 @@ const generalSlice = createSlice({
       hasErrors: true,
       errorMessage: payload,
     }),
-    setIsLoginDialogOpened: (state, {payload}) => ({
+    setIsLoginDialogOpened: (state, { payload }) => ({
       ...state,
-      isLoginDialogOpened: payload
+      isLoginDialogOpened: payload,
     }),
     setRedirectUrl: (state, { payload }) => ({
       ...state,

@@ -1,6 +1,6 @@
 import userSlice from "../user";
 import generalSlice from "../general";
-import { batch } from 'react-redux'
+import { batch } from "react-redux";
 
 export const fetchUserData = (userId) => {
   return async (dispatch) => {
@@ -13,7 +13,7 @@ export const fetchUserData = (userId) => {
       batch(() => {
         dispatch(generalSlice.actions.setIsSuccess());
         dispatch(userSlice.actions.updateInfo(data));
-      })
+      });
     } catch (error) {
       dispatch(generalSlice.actions.setIsFailure(error));
     }

@@ -1,9 +1,6 @@
 const generateId = require("../utils/generateId");
 
 const registerUser = (data) => {
-  // console.log({data});
-  // const { group, ...rest } = data;
-
   const employeesString = localStorage.getItem("employees");
   const employees = JSON.parse(employeesString);
   const userId = generateId();

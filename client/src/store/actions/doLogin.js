@@ -1,6 +1,6 @@
 import generalSlice from "../general";
 import userSlice from "../user";
-import { batch } from 'react-redux'
+import { batch } from "react-redux";
 
 export const doLogin = (userId) => {
   return async (dispatch) => {
@@ -17,9 +17,9 @@ export const doLogin = (userId) => {
       // const { data } = await response.json();
       const { data, error } = await response.json();
 
-      console.log("data received from backend", {data}, {error});
+      console.log("data received from backend", { data }, { error });
       if (error) {
-        dispatch(generalSlice.actions.setIsFailure(error))
+        dispatch(generalSlice.actions.setIsFailure(error));
       } else {
         batch(() => {
           dispatch(userSlice.actions.updateInfo(data));

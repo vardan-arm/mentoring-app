@@ -12,6 +12,8 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import EmploymentInfo from "./EmploymentInfo";
 import GroupManagement from "./GroupManagement";
+import {useDispatch} from "react-redux";
+import { registerUser } from "../../store/actions/registerUser";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,8 +30,15 @@ const Registration = () => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
 
+  const dispatch = useDispatch();
+
   const steps = ["Basic Information", "Employment Information", "Create Group"];
   console.log({ activeStep });
+
+  const handleSubmit = () => {
+    dispatch(registerUser());
+  };
+
   return (
     <Paper className={classes.container}>
       <Typography className={classes.title}>Registration</Typography>
@@ -54,10 +63,9 @@ const Registration = () => {
       {activeStep === 2 && (
         <GroupManagement
           handleBack={() => setActiveStep((activeStep) => activeStep - 1)}
-          handleNext={() => {
-            // TODO: here we need to do API call and save all data
-            setActiveStep((activeStep) => activeStep + 1);
-          }}
+          onSubmit={handleSubmit}
+          backText={'Previous'}
+          submitText={'Submit'}
         />
       )}
     </Paper>

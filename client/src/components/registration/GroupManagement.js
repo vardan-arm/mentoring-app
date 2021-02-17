@@ -11,7 +11,8 @@ import { getAllEmployees } from "../../store/selectors/general";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { getForm, getUserGroup } from "../../store/selectors/form";
 import { MAX_ALLOWED_USERS_IN_GROUP } from "../../utils/constants";
-import { saveUserData } from "../../store/actions/saveUserData";
+import { registerUser } from "../../store/actions/registerUser";
+import {getUser} from "../../store/selectors/user";
 
 const useStyles = makeStyles({
   nextBtn: {
@@ -44,7 +45,8 @@ const useStyles = makeStyles({
   },
 });
 
-const GroupManagement = ({ handleBack, handleNext }) => {
+// const GroupManagement = ({ handleBack, handleNext }) => {
+const GroupManagement = ({ handleBack, onSubmit, backText, submitText }) => {
   const { handleSubmit, errors } = useForm();
 
   const dispatch = useDispatch();
@@ -53,10 +55,15 @@ const GroupManagement = ({ handleBack, handleNext }) => {
     dispatch(fetchAllEmployees());
   }, []);
 
-  // TODO: this email info should be received from backend -> redux
-  // const userEmail = "msealey0@techcrunch.com";
+  const userInfo = useSelector((state) => getUser(state));
+
   const existingFormData = useSelector((state) => getForm(state));
-  const groupedEmployees = useSelector((state) => getUserGroup(state));
+  // const groupedEmployees = useSelector((state) => getUserGroup(state));
+  const groupedEmployeesFromFormData = useSelector((state) => getUserGroup(state));
+
+  // If user is logged in (i.e., he edits previously saved list), get his groups from corresponding reducer.
+  // Otherwise, this is a registration page, therefore show him all groups (from selector).
+  const groupedEmployees = userInfo.id ? userInfo.group : groupedEmployeesFromFormData;
 
   const allEmployees = useSelector((state) => getAllEmployees(state));
 
@@ -81,11 +88,12 @@ const GroupManagement = ({ handleBack, handleNext }) => {
   // console.log({ groupedEmployees });
   // console.log({ allEmployees });
 
-  const onSubmit = (data) => {
+  /*const onSubmit = (data) => {
     // dispatch(userSlice.actions.updateInfo(data));
     // handleNext();
+
     dispatch(saveUserData());
-  };
+  };*/
 
   // TODO: seems this is useful for both frontend validation and handling errors coming from backend:
   //  https://medium.com/@andresss/using-material-ui-with-react-hook-form-is-this-simple-d8383941fafe
@@ -275,14 +283,14 @@ const GroupManagement = ({ handleBack, handleNext }) => {
 
         <WizardButtonsContainer>
           <Button variant="contained" color="primary" onClick={handleBack}>
-            Previous
+            {backText}
           </Button>
           <Button
             variant="contained"
             color="primary"
             onClick={handleSubmit(onSubmit)}
           >
-            Finish
+            {submitText}
           </Button>
         </WizardButtonsContainer>
       </WizardStepContainer>
