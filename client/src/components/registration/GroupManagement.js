@@ -57,6 +57,13 @@ const GroupManagement = ({ handleBack, onSubmit, backText, submitText }) => {
 
   const userInfo = useSelector((state) => getUser(state));
 
+  useEffect(() => {
+    // In edit profile mode, store user's groups in Store's `form` to have consistency with registration mode
+    if (userInfo.id) {
+      dispatch(formSlice.actions.updateData({ group: userInfo.group }));
+    }
+  }, [userInfo.group]);
+
   const existingFormData = useSelector((state) => getForm(state));
   // const groupedEmployees = useSelector((state) => getUserGroup(state));
   const groupedEmployeesFromFormData = useSelector((state) => getUserGroup(state));
