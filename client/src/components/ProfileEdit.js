@@ -1,10 +1,9 @@
 import GroupManagement from "./registration/GroupManagement";
 import { useHistory } from "react-router-dom";
-import {updateUser} from "../store/actions/updateUser";
-import {useDispatch} from "react-redux";
+import { updateUser } from "../store/actions/updateUser";
+import { useDispatch } from "react-redux";
 
-
-const ProfileEdit = ({ match}) => {
+const ProfileEdit = ({ match }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -13,14 +12,16 @@ const ProfileEdit = ({ match}) => {
   const handleCancel = () => history.push(`/profile/${userId}`);
   const handleSubmit = () => {
     dispatch(updateUser());
-  }
+  };
 
-  return <GroupManagement
-    handleBack={handleCancel}
-    onSubmit={handleSubmit}
-    backText={'Cancel'}
-    submitText={'Submit'}
-  />;
+  return (
+    <GroupManagement
+      handleBack={handleCancel}
+      onSubmit={handleSubmit}
+      backText={"Cancel"}
+      submitText={"Submit"}
+    />
+  );
 };
 
 export default ProfileEdit;

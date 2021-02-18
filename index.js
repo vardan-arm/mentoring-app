@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const express = require("express");
 
 const getEmployees = require("./utils/getEmployees");
-const { getProfileData, setProfileData } = require("./utils/getProfileData");
+const { getProfileData } = require("./utils/getProfileData");
 const registerUser = require("./utils/registerUser");
 const validateUserData = require("./utils/validateUserData");
 const { HTTP_STATUSES } = require("./utils/constants");
@@ -12,9 +12,6 @@ const { ok, unprocessableEntity, internalServerError } = HTTP_STATUSES;
 
 const app = express();
 
-// app.get("/api/users", (req, res) => {
-//   res.send(["user 1", "user 2"]);
-// });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -46,22 +43,18 @@ app.post("/api/registerUser", async (req, res) => {
   }
 });
 
-
-app.post('/api/updateUser', async (req, res) => {
+app.post("/api/updateUser", async (req, res) => {
   try {
     const data = req.body;
-    console.log('received data:', data);
     const storedUser = await getProfileData(data.id);
-
-
 
     const employeesString = localStorage.getItem("employees");
     let employees = JSON.parse(employeesString);
-    const userIndex = employees.findIndex(empl => empl.id === storedUser.id);
+    const userIndex = employees.findIndex((empl) => empl.id === storedUser.id);
 
     const updatedUser = {
       ...storedUser,
-      ...data
+      ...data,
     };
 
     employees.splice(userIndex, 1, updatedUser);
@@ -75,7 +68,6 @@ app.post('/api/updateUser', async (req, res) => {
       .status(internalServerError.code)
       .send({ error: internalServerError.message });
   }
-
 });
 
 app.post("/api/login", async (req, res) => {
@@ -101,7 +93,6 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// app.get("/api/profileData", (req, res) => {
 app.get("/api/profileData/:userId", async (req, res) => {
   const { userId } = req.params;
 

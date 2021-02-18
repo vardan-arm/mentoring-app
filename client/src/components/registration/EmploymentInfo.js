@@ -29,13 +29,6 @@ const EmploymentInfo = ({ handleBack, handleNext }) => {
     handleNext();
   };
 
-  // TODO: seems this is useful for both frontend validation and handling errors coming from backend:
-  //  https://medium.com/@andresss/using-material-ui-with-react-hook-form-is-this-simple-d8383941fafe
-
-  console.log("employee errors:", errors);
-
-  // const classes = useStyles();
-
   return (
     <>
       <WizardStepContainer title={"Employment Information"}>

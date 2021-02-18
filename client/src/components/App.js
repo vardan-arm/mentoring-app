@@ -1,9 +1,7 @@
 import Header from "./Header";
 import { BrowserRouter, Route } from "react-router-dom";
-// import Registration from "./Registration";
 import Registration from "./registration";
 import Profile from "./Profile";
-import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Landing from "./Landing";
 import ProfileEdit from "./ProfileEdit";

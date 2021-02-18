@@ -1,4 +1,3 @@
-// TODO: Do I need them at all?
 const getEmployees = require("./getEmployees");
 
 const getProfileData = async (userId) => {
@@ -8,6 +7,4 @@ const getProfileData = async (userId) => {
   return employee;
 };
 
-const setProfileData = (data) => {};
-
-module.exports = { getProfileData, setProfileData };
+module.exports = { getProfileData };

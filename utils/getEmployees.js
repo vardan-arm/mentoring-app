@@ -3,7 +3,6 @@ const fs = require("fs");
 
 const generateId = require("../utils/generateId");
 
-// const getEmployees = async () => {
 const getEmployees = () => {
   return new Promise((resolve) => {
     try {

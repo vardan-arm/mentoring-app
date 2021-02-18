@@ -8,7 +8,6 @@ export const fetchAllEmployees = () => {
       const response = await fetch("/api/employees");
       const { data } = await response.json();
 
-      console.log("data received from backend", data);
       dispatch(generalSlice.actions.setIsSuccess());
       dispatch(generalSlice.actions.setAllEmployees(data));
     } catch (error) {

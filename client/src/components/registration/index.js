@@ -1,10 +1,6 @@
 import Paper from "@material-ui/core/Paper";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { makeStyles } from "@material-ui/core/styles";
-// import Stepper from '@material-ui/core/Stepper';
-// import Step from '@material-ui/core/Step';
-// import StepLabel from '@material-ui/core/StepLabel';
 import Typography from "@material-ui/core/Typography";
 import ProfileInfo from "./ProfileInfo";
 import Step from "@material-ui/core/Step";
@@ -12,12 +8,11 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import EmploymentInfo from "./EmploymentInfo";
 import GroupManagement from "./GroupManagement";
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { registerUser } from "../../store/actions/registerUser";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    // width: '70%',
     margin: "12px 16px 24px",
   },
   title: {
@@ -33,7 +28,6 @@ const Registration = () => {
   const dispatch = useDispatch();
 
   const steps = ["Basic Information", "Employment Information", "Create Group"];
-  console.log({ activeStep });
 
   const handleSubmit = () => {
     dispatch(registerUser());
@@ -64,8 +58,8 @@ const Registration = () => {
         <GroupManagement
           handleBack={() => setActiveStep((activeStep) => activeStep - 1)}
           onSubmit={handleSubmit}
-          backText={'Previous'}
-          submitText={'Submit'}
+          backText={"Previous"}
+          submitText={"Submit"}
         />
       )}
     </Paper>

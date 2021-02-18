@@ -11,8 +11,7 @@ import { getAllEmployees } from "../../store/selectors/general";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { getForm, getUserGroup } from "../../store/selectors/form";
 import { MAX_ALLOWED_USERS_IN_GROUP } from "../../utils/constants";
-import { registerUser } from "../../store/actions/registerUser";
-import {getUser} from "../../store/selectors/user";
+import { getUser } from "../../store/selectors/user";
 
 const useStyles = makeStyles({
   nextBtn: {
@@ -45,7 +44,6 @@ const useStyles = makeStyles({
   },
 });
 
-// const GroupManagement = ({ handleBack, handleNext }) => {
 const GroupManagement = ({ handleBack, onSubmit, backText, submitText }) => {
   const { handleSubmit, errors } = useForm();
 
@@ -65,12 +63,15 @@ const GroupManagement = ({ handleBack, onSubmit, backText, submitText }) => {
   }, [userInfo.group]);
 
   const existingFormData = useSelector((state) => getForm(state));
-  // const groupedEmployees = useSelector((state) => getUserGroup(state));
-  const groupedEmployeesFromFormData = useSelector((state) => getUserGroup(state));
+  const groupedEmployeesFromFormData = useSelector((state) =>
+    getUserGroup(state)
+  );
 
   // If user is logged in (i.e., he edits previously saved list), get his groups from corresponding reducer.
   // Otherwise, this is a registration page, therefore show him all groups (from selector).
-  const groupedEmployees = userInfo.id ? userInfo.group : groupedEmployeesFromFormData;
+  const groupedEmployees = userInfo.id
+    ? userInfo.group
+    : groupedEmployeesFromFormData;
 
   const allEmployees = useSelector((state) => getAllEmployees(state));
 
@@ -79,36 +80,20 @@ const GroupManagement = ({ handleBack, onSubmit, backText, submitText }) => {
 
   useEffect(() => {
     const groupedEmployeesIds = groupedEmployees.map((grpEmpl) => grpEmpl.id);
-    // Remove all the employees coming from Redux from already grouped ones
+    // Remove all the employees coming from Redux from already grouped ones and also remove the logged in user from list
     const filteredAllEmployees = allEmployees.filter(
       (employee) =>
         !groupedEmployeesIds.includes(employee.id) &&
-        employee.email !== existingFormData.email
+        employee.email !== (userInfo.email || existingFormData.email) // covers both logged-in and registration modes
     );
 
     setLocalGroupedEmployees(groupedEmployees);
     setLocalAllEmployees(filteredAllEmployees);
-
-    console.log("in effect", groupedEmployees);
   }, [allEmployees, groupedEmployees]);
-
-  // console.log({ groupedEmployees });
-  // console.log({ allEmployees });
-
-  /*const onSubmit = (data) => {
-    // dispatch(userSlice.actions.updateInfo(data));
-    // handleNext();
-
-    dispatch(saveUserData());
-  };*/
-
-  // TODO: seems this is useful for both frontend validation and handling errors coming from backend:
-  //  https://medium.com/@andresss/using-material-ui-with-react-hook-form-is-this-simple-d8383941fafe
 
   /*
    * DnD stuff
    * */
-
   const getList = (id) =>
     id === "groupedEmployees" ? localGroupedEmployees : localAllEmployees;
 

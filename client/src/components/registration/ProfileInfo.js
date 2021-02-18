@@ -1,20 +1,12 @@
 import { useForm, Controller } from "react-hook-form";
-import { useEffect, useState } from "react";
 import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
 import WizardButtonsContainer from "../common/WizardButtonsContainer";
 import WizardStepContainer from "../common/WizardStepContainer";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import userSlice from "../../store/user";
 import formSlice from "../../store/form";
 import { getForm } from "../../store/selectors/form";
-import Paper from "@material-ui/core/Paper";
-import { fetchAllEmployees } from "../../store/actions/fetchAllEmployees";
 import { EMAIL_VALIDATION_REGEX } from "../../utils/constants";
 
 const useStyles = makeStyles({
@@ -25,14 +17,7 @@ const useStyles = makeStyles({
 });
 
 const ProfileInfo = ({ handleNext }) => {
-  const {
-    register,
-    handleSubmit,
-    control,
-    watch,
-    errors,
-    submit: formSubmit,
-  } = useForm();
+  const { handleSubmit, control, errors } = useForm();
 
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -44,10 +29,6 @@ const ProfileInfo = ({ handleNext }) => {
     handleNext();
   };
 
-  // TODO: seems this is useful for both frontend validation and handling errors coming from backend:
-  //  https://medium.com/@andresss/using-material-ui-with-react-hook-form-is-this-simple-d8383941fafe
-
-  // TODO: create a separate component to avoid components duplication below
   return (
     <>
       <WizardStepContainer title={"Basic Information"}>

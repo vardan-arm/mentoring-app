@@ -7,8 +7,6 @@ const registerUser = (data) => {
 
   employees.push({
     id: userId,
-    // ...rest,
-    // group
     ...data,
   });
 

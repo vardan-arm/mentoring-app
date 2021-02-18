@@ -1,6 +1,7 @@
 import generalSlice from "../general";
 import userSlice from "../user";
 import formSlice from "../form";
+import { batch } from "react-redux";
 
 export const registerUser = () => {
   return async (dispatch, getState) => {
@@ -18,12 +19,13 @@ export const registerUser = () => {
       });
       const { data } = await response.json();
 
-      console.log("data received from backend", data.user.userId);
-      dispatch(generalSlice.actions.setIsSuccess());
-      dispatch(userSlice.actions.updateInfo(data.user));
-      dispatch(
-        generalSlice.actions.setRedirectUrl(`/profile/${data.user.userId}`)
-      );
+      batch(() => {
+        dispatch(generalSlice.actions.setIsSuccess());
+        dispatch(userSlice.actions.updateInfo(data.user));
+        dispatch(
+          generalSlice.actions.setRedirectUrl(`/profile/${data.user.userId}`)
+        );
+      });
 
       // cleanup form info in store
       dispatch(formSlice.actions.clearData());

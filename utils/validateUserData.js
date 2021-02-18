@@ -1,3 +1,6 @@
+const MAX_ALLOWED_USERS_IN_GROUP = require("./constants")
+  .MAX_ALLOWED_USERS_IN_GROUP;
+
 const validateUserData = ({
   first_name,
   last_name,
@@ -5,6 +8,7 @@ const validateUserData = ({
   age,
   department,
   jobTitle,
+  group,
 }) => {
   const errorMessage = "Please provide all required fields with correct format";
   let error = "";
@@ -47,6 +51,10 @@ const validateUserData = ({
     error = errorMessage;
 
     return error;
+  }
+
+  if (!Array.isArray(group) || group.length > MAX_ALLOWED_USERS_IN_GROUP) {
+    error = errorMessage;
   }
 
   return error;

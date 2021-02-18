@@ -21,4 +21,5 @@ const MAX_ALLOWED_USERS_IN_GROUP = 5; // this should be in one place actually an
 
 module.exports = {
   HTTP_STATUSES,
+  MAX_ALLOWED_USERS_IN_GROUP,
 };

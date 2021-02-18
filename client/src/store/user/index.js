@@ -1,9 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  // userInfo: {},
-  // group: [],
-};
+const initialState = {};
 
 const userSlice = createSlice({
   name: "user",
@@ -16,6 +13,7 @@ const userSlice = createSlice({
       };
     },
     logout() {
+      // In real application we will do backend logout as well
       return initialState;
     },
   },

@@ -14,10 +14,9 @@ export const doLogin = (userId) => {
         },
         body: JSON.stringify(userId),
       });
-      // const { data } = await response.json();
+
       const { data, error } = await response.json();
 
-      console.log("data received from backend", { data }, { error });
       if (error) {
         dispatch(generalSlice.actions.setIsFailure(error));
       } else {

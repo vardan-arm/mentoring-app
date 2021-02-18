@@ -1,6 +1,7 @@
 import generalSlice from "../general";
 import userSlice from "../user";
 import formSlice from "../form";
+import { batch } from "react-redux";
 
 // TODO: implement this!!!
 export const updateUser = () => {
@@ -10,7 +11,7 @@ export const updateUser = () => {
     try {
       const userData = {
         ...getState().form,
-        id: getState().user.id
+        id: getState().user.id,
       };
 
       const response = await fetch("/api/updateUser", {
@@ -22,11 +23,13 @@ export const updateUser = () => {
       });
       const { data } = await response.json();
 
-      dispatch(generalSlice.actions.setIsSuccess());
-      dispatch(userSlice.actions.updateInfo(data.user));
-      dispatch(
-        generalSlice.actions.setRedirectUrl(`/profile/${data.user.userId}`)
-      );
+      batch(() => {
+        dispatch(generalSlice.actions.setIsSuccess());
+        dispatch(userSlice.actions.updateInfo(data.user));
+        dispatch(
+          generalSlice.actions.setRedirectUrl(`/profile/${data.user.userId}`)
+        );
+      });
 
       // cleanup form info in store
       dispatch(formSlice.actions.clearData());

@@ -27,16 +27,6 @@ const useStyles = makeStyles({
 
 const LoginDialog = () => {
   const classes = useStyles();
-  // const [open, setOpen] = React.useState(false);
-  // const [open, setOpen] = React.useState(isOpen);
-
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-  //
-  /*const handleClose = () => {
-    // setOpen(false);
-  };*/
   const dispatch = useDispatch();
 
   const handleClose = () => {
@@ -49,7 +39,6 @@ const LoginDialog = () => {
   const generalErrorInfo = useSelector((state) => getErrorInfo(state));
 
   const onSubmit = (email) => {
-    // console.log('validated', email);
     dispatch(doLogin(email));
   };
 
