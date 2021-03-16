@@ -5,7 +5,11 @@ import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 
+// import './i18n';
 import store from "./store";
+import fib from "./fib";
+
+console.log(fib(9));
 
 ReactDOM.render(
   <React.StrictMode>

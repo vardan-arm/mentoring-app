@@ -21,3 +21,11 @@ export const getErrorInfo = createSelector(getGeneral, (general) => ({
   hasErrors: general.hasErrors,
   errorMessage: general.errorMessage,
 }));
+
+export const getI18nTranslations = createSelector(getGeneral,
+  (general) => general.translations);
+
+export const getIsCompareProfilesDialogOpened = createSelector(
+  getGeneral,
+  (general) => general.isCompareProfilesDialogOpened
+);

@@ -3,6 +3,10 @@ require("./storageSetup");
 const bodyParser = require("body-parser");
 const express = require("express");
 
+const LocaleService = require('./services/localeService');
+const i18n = require('./configs/i18n.config');
+
+const getI18nMessages = require("./utils/getI18nMessages");
 const getEmployees = require("./utils/getEmployees");
 const { getProfileData } = require("./utils/getProfileData");
 const registerUser = require("./utils/registerUser");
@@ -14,6 +18,24 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+/*
+
+const localeService = new LocaleService(i18n);
+console.log(localeService.getLocales()); // ['en', 'el']
+console.log('English: ', localeService.translate('login'));
+localeService.setLocale('am');
+console.log(localeService.getCurrentLocale()); // 'en'
+console.log('Armenian: ', localeService.translate('login'));
+*/
+
+app.get("/api/translations", async(req, res) => {
+  const lang = req.query.lang || 'en';
+  const messages = await getI18nMessages(lang);
+  // console.log('messages', messages);
+  
+  res.send({data: messages})
+});
 
 app.get("/api/employees", async (req, res) => {
   const employees = await getEmployees();

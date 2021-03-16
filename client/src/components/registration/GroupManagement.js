@@ -1,17 +1,19 @@
-import { useForm, Controller } from "react-hook-form";
+import {useForm, Controller} from "react-hook-form";
 import Button from "@material-ui/core/Button";
 import WizardButtonsContainer from "../common/WizardButtonsContainer";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import formSlice from "../../store/form";
-import { useDispatch, useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import WizardStepContainer from "../common/WizardStepContainer";
-import React, { useState, useEffect } from "react";
-import { fetchAllEmployees } from "../../store/actions/fetchAllEmployees";
-import { getAllEmployees } from "../../store/selectors/general";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { getForm, getUserGroup } from "../../store/selectors/form";
-import { MAX_ALLOWED_USERS_IN_GROUP } from "../../utils/constants";
-import { getUser } from "../../store/selectors/user";
+import React, {useState, useEffect} from "react";
+import {fetchAllEmployees} from "../../store/actions/fetchAllEmployees";
+import {getAllEmployees, getIsLoginDialogOpened} from "../../store/selectors/general";
+import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
+import {getForm, getUserGroup} from "../../store/selectors/form";
+import {MAX_ALLOWED_USERS_IN_GROUP} from "../../utils/constants";
+import {getUser} from "../../store/selectors/user";
+import CompareProfilesialog from "../CompareProfilesDialog";
+import generalSlice from "../../store/general";
 
 const useStyles = makeStyles({
   nextBtn: {
@@ -44,8 +46,8 @@ const useStyles = makeStyles({
   },
 });
 
-const GroupManagement = ({ handleBack, onSubmit, backText, submitText }) => {
-  const { handleSubmit, errors } = useForm();
+const GroupManagement = ({handleBack, onSubmit, backText, submitText}) => {
+  const {handleSubmit, errors} = useForm();
 
   const dispatch = useDispatch();
 
@@ -58,7 +60,7 @@ const GroupManagement = ({ handleBack, onSubmit, backText, submitText }) => {
   useEffect(() => {
     // In edit profile mode, store user's groups in Store's `form` to have consistency with registration mode
     if (userInfo.id) {
-      dispatch(formSlice.actions.updateData({ group: userInfo.group }));
+      dispatch(formSlice.actions.updateData({group: userInfo.group}));
     }
   }, [userInfo.group]);
 
@@ -98,7 +100,7 @@ const GroupManagement = ({ handleBack, onSubmit, backText, submitText }) => {
     id === "groupedEmployees" ? localGroupedEmployees : localAllEmployees;
 
   const onDragEnd = (result) => {
-    const { source, destination } = result;
+    const {source, destination} = result;
 
     // dropped outside the list
     if (!destination) {
@@ -118,7 +120,7 @@ const GroupManagement = ({ handleBack, onSubmit, backText, submitText }) => {
         setLocalGroupedEmployees(items);
 
         // store changes in Redux
-        dispatch(formSlice.actions.updateData({ group: items }));
+        dispatch(formSlice.actions.updateData({group: items}));
       }
     } else {
       // Don't let adding more than allowed users in one group
@@ -142,7 +144,7 @@ const GroupManagement = ({ handleBack, onSubmit, backText, submitText }) => {
 
       // store changes in Redux
       dispatch(
-        formSlice.actions.updateData({ group: result.groupedEmployees })
+        formSlice.actions.updateData({group: result.groupedEmployees})
       );
     }
   };
@@ -259,6 +261,7 @@ const GroupManagement = ({ handleBack, onSubmit, backText, submitText }) => {
                               snapshot.isDragging,
                               provided.draggableProps.style
                             )}
+                            onClick={() => dispatch(generalSlice.actions.setIsLoginDialogOpened(true))}
                           >
                             {item.first_name} {item.last_name}, {item.email}
                           </div>
@@ -284,6 +287,7 @@ const GroupManagement = ({ handleBack, onSubmit, backText, submitText }) => {
           >
             {submitText}
           </Button>
+          <CompareProfilesialog />
         </WizardButtonsContainer>
       </WizardStepContainer>
     </>

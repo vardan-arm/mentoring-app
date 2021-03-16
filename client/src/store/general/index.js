@@ -7,6 +7,8 @@ const initialState = {
   redirectUrl: "", // whenever this is not empty string, the page will be redirected
   allEmployees: [],
   isLoginDialogOpened: false,
+  isCompareProfilesDialogOpened: false,
+  translations: []
 };
 
 const generalSlice = createSlice({
@@ -44,6 +46,14 @@ const generalSlice = createSlice({
       ...state,
       allEmployees: payload,
     }),
+    setTranslations: (state, {payload}) => ({
+      ...state,
+      translations: payload
+    }),
+    setIsCompareProfilesDialogOpened: (state, {payload}) => ({
+      ...state,
+      isCompareProfilesDialogOpened: payload
+    })
   },
 });
 
