@@ -20,7 +20,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 /*
-
 const localeService = new LocaleService(i18n);
 console.log(localeService.getLocales()); // ['en', 'el']
 console.log('English: ', localeService.translate('login'));
