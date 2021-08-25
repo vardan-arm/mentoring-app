@@ -25,7 +25,6 @@ console.log(localeService.getLocales()); // ['en', 'el']
 console.log('English: ', localeService.translate('login'));
 
 localeService.setLocale('am');
-
 console.log(localeService.getCurrentLocale()); // 'en'
 console.log('Armenian: ', localeService.translate('login'));
 */
